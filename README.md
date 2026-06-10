@@ -1,1 +1,2 @@
-# DataFlow Pro\n\nReal-time analytics platform
+# DataFlow Pro
+Real-time analytics platform
