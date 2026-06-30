@@ -5,6 +5,13 @@ from sqlalchemy.orm import relationship
 from fastapi_app.database import Base
 
 class EventAggregate(Base):
+    """A daily rollup of raw events by type, per project.
+
+    Raw events live in MongoDB; this table stores the aggregated counts
+    (one row per project / event_type / event_date) that power analytics
+    queries without scanning the raw event store.
+    """
+
     __tablename__ = "event_aggregates"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)

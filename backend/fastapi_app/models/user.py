@@ -5,6 +5,12 @@ from sqlalchemy.orm import relationship
 from fastapi_app.database import Base
 
 class User(Base):
+    """A registered account that owns projects.
+
+    Authentication identity for the platform. Each user can own many
+    projects (deleting a user cascades to their projects).
+    """
+
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)

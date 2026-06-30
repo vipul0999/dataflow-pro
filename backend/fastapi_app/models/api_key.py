@@ -5,6 +5,12 @@ from sqlalchemy.orm import relationship
 from fastapi_app.database import Base
 
 class APIKey(Base):
+    """An authentication token used to ingest events for a project.
+
+    Clients send this key when submitting raw events. Keys can be
+    deactivated (`is_active = False`) to revoke access without deletion.
+    """
+
     __tablename__ = "api_keys"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)

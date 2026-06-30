@@ -5,6 +5,12 @@ from sqlalchemy.orm import relationship
 from fastapi_app.database import Base
 
 class Project(Base):
+    """A workspace that groups events, API keys, and aggregates.
+
+    Owned by a single user. Incoming events are attributed to a project
+    via its API keys; analytics are rolled up per project.
+    """
+
     __tablename__ = "projects"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)

@@ -1,3 +1,11 @@
+"""PostgreSQL connection setup for the FastAPI app.
+
+Loads ``DATABASE_URL`` from the environment (.env), creates the SQLAlchemy
+engine and session factory, and exposes the declarative ``Base`` that all
+ORM models inherit from. ``get_db()`` is a FastAPI dependency that yields a
+request-scoped session and closes it afterwards.
+"""
+
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine

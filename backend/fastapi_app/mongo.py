@@ -1,4 +1,12 @@
 # backend/fastapi_app/mongo.py
+"""MongoDB connection and helpers for raw event storage.
+
+Raw events are append-only and schema-less, so they live in MongoDB
+(database ``dataflow_raw``, collection ``raw_events``) rather than
+PostgreSQL. See DECISIONS.md for the rationale. Aggregated counts are
+rolled up into PostgreSQL's ``event_aggregates`` table for analytics.
+"""
+
 import os
 from typing import List, Dict, Any
 from pymongo import MongoClient
