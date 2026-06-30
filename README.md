@@ -11,17 +11,21 @@ relational data lives in **PostgreSQL**, while high-volume raw events live in
 **MongoDB**.
 
 ```
-                  ┌─────────────────────────────────────────┐
-   client ──▶ API │  FastAPI (backend/fastapi_app)           │
-   (event)        │                                          │
-                  │   raw event ──▶ MongoDB  (dataflow_raw)   │  schema-less,
-                  │                  raw_events collection    │  high write volume
-                  │                                          │
-                  │   rollup    ──▶ PostgreSQL                │  structured,
-                  │                  users / projects /       │  relational
-                  │                  api_keys / event_aggregates
-                  └─────────────────────────────────────────┘
-                         Alembic manages the Postgres schema
+                 ┌──────────────────────────────────────────────┐
+  client ──────▶ │  FastAPI (backend/fastapi_app)                │
+  (event)        │                                                │
+                 │     ┌── raw event ──▶ MongoDB (dataflow_raw)   │  schema-less,
+                 │     │                  raw_events collection   │  high write volume
+                 │     │                                          │
+                 │     └── rollup ─────▶ PostgreSQL               │  structured,
+                 │                        users / projects /      │  relational
+                 │                        api_keys /              │
+                 │                        event_aggregates        │
+                 └──────────────────────────────────────────────┘
+                              ▲
+                              │
+                       Alembic manages
+                       the Postgres schema
 ```
 
 **Why two databases?** Raw events are append-only, vary by event type, and
