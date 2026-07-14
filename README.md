@@ -28,10 +28,7 @@ relational data lives in **PostgreSQL**, while high-volume raw events live in
                        the Postgres schema
 ```
 
-**Why two databases?** Raw events are append-only, vary by event type, and
-arrive at high volume — a natural fit for MongoDB's schema-less documents.
-Aggregated counts and account data (users, projects, keys) have a fixed schema
-and benefit from relational queries and constraints, so they live in Postgres.
+**Why two databases?** MongoDB stores heterogeneous raw-event payloads using a flexible document model, while PostgreSQL stores structured account, project, API-key, and aggregate data.
 See [DECISIONS.md](DECISIONS.md) for the full rationale.
 
 ### Data model (PostgreSQL)
@@ -45,8 +42,7 @@ See [DECISIONS.md](DECISIONS.md) for the full rationale.
 
 Raw events themselves are stored in MongoDB (`dataflow_raw.raw_events`).
 
-## Project layout
-
+## Current Architecture — Sprint 1
 ```
 dataflow-pro/
 ├── backend/
@@ -70,7 +66,7 @@ dataflow-pro/
 
 ## Prerequisites
 
-- **Python 3.14**
+- **Python 3.11/3.12**
 - **Docker Desktop** (runs PostgreSQL and MongoDB locally)
 - **Git**
 
@@ -97,13 +93,9 @@ Then edit `.env` and set a real `SECRET_KEY`. The defaults for
 ### 3. Start the databases (Docker)
 
 ```powershell
-# PostgreSQL
-docker run --name dataflow-postgres `
-  -e POSTGRES_USER=dfuser -e POSTGRES_PASSWORD=dfpass -e POSTGRES_DB=dataflow `
-  -p 5432:5432 -d postgres
-
-# MongoDB
-docker run --name dataflow-mongo -p 27017:27017 -d mongo
+docker compose up -d
+docker compose ps
+docker compose down
 ```
 
 On later sessions, reuse the existing containers instead of recreating them:
@@ -123,6 +115,13 @@ Verify the tables were created:
 
 ```powershell
 docker exec dataflow-postgres psql -U dfuser -d dataflow -c "\dt"
+```
+## Verification
+
+### Check Docker services
+
+```bash
+docker compose ps
 ```
 
 ## Database migrations (Alembic)
